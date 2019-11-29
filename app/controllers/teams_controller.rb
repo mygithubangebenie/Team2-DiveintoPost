@@ -32,7 +32,8 @@ class TeamsController < ApplicationController
   def update
     if params[:owner_id]
       @team.update(owner_id: params[:owner_id])
-      
+      user = User.find(@team.owner_id)
+      TeamLeaderMailer.team_leader_mail(user, @team).deliver
       redirect_to @team, notice: 'leader changed'
     elsif @team.update(team_params)
         redirect_to @team, notice: I18n.t('views.messages.update_team')
